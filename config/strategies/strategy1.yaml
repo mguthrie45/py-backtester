@@ -1,0 +1,26 @@
+name: strategy1
+params:
+  stop_loss: 0.05
+  conditions:
+    - type: external
+      name: python-file-condition
+      context_attrs:
+        slice_lookback_window_size: 0
+        include_portfolio: true
+      py_file: C:\Users\mguth\Desktop\backtest\config\strategies\conditions\condition1.py
+#    - type: expression
+#      name: sma-crossover-positive
+#      action_policy: crossover
+#      metric_attrs:
+#        - sma_10
+#        - sma_50
+#      expr: sma_10 > sma_50
+#      action: buy
+#    - type: expression
+#      name: sma-crossover-positive
+#      action_policy: crossover
+#      metric_attrs:
+#        - sma_10
+#        - sma_50
+#      expr: sma_10 < sma_50
+#      action: sell

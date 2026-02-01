@@ -1,0 +1,19 @@
+name: test1
+strategy: strategy1
+data_params: 
+  ticker: AAPL
+  time_interval: 1d
+  batch_size: 5
+  start_dt: 2026-01-01T00:00:00.000Z
+  end_dt: 2026-01-30T00:00:00.000Z
+trading_params:
+  evaluation_period: 1 
+  pcpl_usd: 1000
+  stake_ratio: 0.05
+logging_params:
+  level: debug
+  portfolio_state: true
+  stock_state: true
+  strategy_eval: true
+report_params:
+  gen: true
