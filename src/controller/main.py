@@ -1,5 +1,6 @@
 from typing import Iterator
-from datasource.preprocessorv2 import DataPreprocessor
+from datasource.datasource_singleton import Datasource
+from datasource.processor import DatasourceProcessor
 from log.logger import Logger
 from strategy.Strategy import Strategy
 from model.config.Test import Test
@@ -33,9 +34,13 @@ class MainController:
         self.portfolio = PortfolioController(self.test.trading_params.pcpl_usd)
         Logger.debug("Portfolio initialized.")
 
-        preprocessor = DataPreprocessor(self.test, self.strategy)
-        Logger.debug("Preprocessor initialized.")
-        self.slice_batches = preprocessor.slice_batches
+        yf_datasource = Datasource(self.test, self.strategy)
+        Logger.debug("Yahoo finance datasource initialized.")
+
+        processor = DatasourceProcessor(yf_datasource, self.strategy)
+        Logger.debug("Datasource processor initialized.")
+
+        self.slice_batches = processor.slice_batches
 
         self.curr_slice_idx = 0
 

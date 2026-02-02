@@ -14,6 +14,7 @@ from pydantic import (
 
 from log.types import LoggingParams
 from model.config.TimeInterval import TimeInterval
+from model.config.types import DatasourceType
 
 
 class DataParams(BaseModel):
@@ -22,6 +23,7 @@ class DataParams(BaseModel):
     batch_size: int = 100
     start_dt: datetime
     end_dt: Optional[datetime] = Field(datetime.now())
+    datasource_type: DatasourceType = DatasourceType.YAHOO_FINANCE
 
 
 # TODO: parameter to ignore portfolio/holdings and just send actions no matter what?

@@ -1,7 +1,6 @@
 import logging
 
-from log.types import LogLevelAdapter
-from model.config.Test import LoggingParams
+from log.types import LogLevelAdapter, LoggingParams
 
 
 class Logger:
