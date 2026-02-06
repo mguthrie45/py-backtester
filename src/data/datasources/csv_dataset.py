@@ -1,6 +1,6 @@
 from typing import Iterator
 from pandas import DataFrame
-from datasource.abstract_datasource import AbstractDatasource
+from data.datasources.generic import AbstractDatasource
 from model.config.Test import Test
 from strategy.Strategy import Strategy
 

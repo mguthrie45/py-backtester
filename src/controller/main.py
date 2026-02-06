@@ -1,6 +1,6 @@
 from typing import Iterator
-from datasource.datasource_singleton import Datasource
-from datasource.processor import DatasourceProcessor
+from data.datasources.singleton import Datasource
+from data.processor import DatasourceProcessor
 from log.logger import Logger
 from strategy.Strategy import Strategy
 from model.config.Test import Test
@@ -31,7 +31,7 @@ class MainController:
         Logger.debug("Using strategy: \n%s", self.strategy)
         Logger.info("Using strategy: %s", self.strategy.name)
 
-        self.portfolio = PortfolioController(self.test.trading_params.pcpl_usd)
+        self.portfolio = PortfolioController()
         Logger.debug("Portfolio initialized.")
 
         yf_datasource = Datasource(self.test, self.strategy)
@@ -72,8 +72,6 @@ class MainController:
                 stock_slice = slice_batch[slice_idx]
 
                 Logger.debug("Evaluating slice: \n%s", stock_slice)
-
-                self.portfolio.update_holdings(stock_slice)
 
                 slices_with_lookback = slice_batch[
                     slice_idx - self.strategy.max_lookback : slice_idx + 1

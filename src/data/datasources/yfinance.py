@@ -5,8 +5,8 @@ import pandas as pd
 from pandas import DataFrame
 import yfinance
 
-from datasource.abstract_datasource import AbstractDatasource
-from datasource.types import (
+from data.datasources.generic import AbstractDatasource
+from data.types import (
     PRICE_HISTORY_DATA_FRAME_INDEX_NAME,
     PriceHistoryDataFrameMetricsName_Base,
     PriceHistoryDataFrameMetricsName_BaseAdapter,

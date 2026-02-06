@@ -12,7 +12,7 @@ from pydantic import (
     model_validator,
 )
 
-from log.types import LoggingParams
+from log.types import LogLevel
 from model.config.TimeInterval import TimeInterval
 from model.config.types import DatasourceType
 
@@ -26,16 +26,16 @@ class DataParams(BaseModel):
     datasource_type: DatasourceType = DatasourceType.YAHOO_FINANCE
 
 
-# TODO: parameter to ignore portfolio/holdings and just send actions no matter what?
 class TradingParams(BaseModel):
-    pcpl_usd: int = Field(..., gt=0)
-    stake_ratio: float = Field(..., gt=0, le=1)
     evaluation_period: int = Field(..., gt=0)
 
 
-# TODO: Create report generator
 class ReportParams(BaseModel):
     gen: bool
+
+
+class LoggingParams(BaseModel):
+    level: Optional[LogLevel] = None
 
 
 class Test(BaseModel):

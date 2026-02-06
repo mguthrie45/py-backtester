@@ -2,7 +2,7 @@ from typing import Iterator
 
 import pandas as pd
 from pandas import DataFrame
-from datasource.datasource_singleton import Datasource
+from data.datasources.singleton import Datasource
 from log.logger import Logger
 from metrics.slice.extended.provider import ExtendedMetricsProvider
 from metrics.slice.types import StockSliceMetricsName_Base

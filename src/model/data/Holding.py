@@ -14,13 +14,4 @@ class Holding(BaseModel):
     type: HoldingType
     purchased_dt: datetime
     buy_price: float
-    curr_price: float
     num_shares: int
-
-    @property
-    def profit(self) -> float:
-        return (self.curr_price - self.buy_price) * self.num_shares
-
-    @property
-    def value(self) -> float:
-        return self.curr_price * self.num_shares

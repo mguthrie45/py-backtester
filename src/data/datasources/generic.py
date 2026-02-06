@@ -10,7 +10,7 @@ from model.config.Test import Test
 from strategy.Strategy import Strategy
 
 
-class AbstractDatasource(ABC, object):
+class AbstractDatasource(ABC):
     _stategy: Strategy
     _test: Test
 
