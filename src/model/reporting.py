@@ -1,4 +1,7 @@
-from abc import ABC
+"""
+Observation types and reporting metadata (combined from model.reporting.observable and types).
+"""
+from abc import ABC, abstractmethod
 from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
@@ -6,10 +9,38 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseModel, Field
 
-from model.data.types import JSONable
-from model.reporting.observable import Observable, ObservableState, ObservableTrade
+class JSONable(ABC):
+    @property
+    def json(self) -> dict:
+        pass
+
+
+class Observable(ABC):
+    ticker: Optional[str] = None
+
+    @staticmethod
+    @abstractmethod
+    def obs_field_prefix() -> str:
+        """A prefix to namespace the attributes"""
+
+    @staticmethod
+    @abstractmethod
+    def obs_fields() -> list[str]:
+        """The attrs to observe"""
+
+    @property
+    @abstractmethod
+    def obs_json(self) -> dict:
+        """JSON representation of observation"""
+
+
+class ObservableState(Observable):
+    ticker: Optional[str] = None
+
+
+class ObservableTrade(Observable):
+    ticker: str
 
 
 class ObservationType(Enum):

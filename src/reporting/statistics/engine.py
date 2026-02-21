@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 
-from model.reporting.types import ObservationType
+from model.reporting import ObservationType
 from reporting.context import ObservationContext
 from reporting.statistics.loader import ObservationLoader
 

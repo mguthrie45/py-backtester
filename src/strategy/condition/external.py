@@ -9,10 +9,8 @@ from pydantic import BaseModel, FilePath, model_validator, Field
 
 from log.logger import Logger
 from metrics.slice.types import StockSliceMetricsName
-from model.data.trade_slices import TradeAction
-from model.data.state_slices import CapitalStateSliceWindow
-from model.data.state_slices import HoldingStateSliceWindow
-from model.data.state_slices import StockSliceWindow
+from model.state_slices import CapitalStateSliceWindow, HoldingStateSliceWindow, StockSliceWindow
+from model.trade_slices import TradeAction
 from strategy.condition.types import ConditionType
 
 

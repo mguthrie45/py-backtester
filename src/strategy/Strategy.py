@@ -14,10 +14,15 @@ from log.logger import Logger
 from metrics.slice.types import (
     StockSliceMetricsName_Extended,
 )
-from model.data.trade_slices import TradeAction
-from model.data.state_slices import CapitalStateSlice, CapitalStateSliceWindow
-from model.data.state_slices import HoldingStateSlice, HoldingStateSliceWindow
-from model.data.state_slices import StockSlice, StockSliceWindow
+from model.state_slices import (
+    CapitalStateSlice,
+    CapitalStateSliceWindow,
+    HoldingStateSlice,
+    HoldingStateSliceWindow,
+    StockSlice,
+    StockSliceWindow,
+)
+from model.trade_slices import TradeAction
 from strategy.condition.expression import ExpressionCondition
 from strategy.condition.external import ExternalCondition
 

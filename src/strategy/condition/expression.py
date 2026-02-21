@@ -9,8 +9,8 @@ from metrics.slice.types import (
     StockSliceMetricsName_Extended,
     StockSliceExtendedMetricsNameBatchExtensionSizeAdapter,
 )
-from model.data.trade_slices import TradeAction
-from model.data.state_slices import StockSlice
+from model.state_slices import StockSlice
+from model.trade_slices import TradeAction
 from strategy.condition.types import (
     ConditionType,
     TradeActionPolicy,

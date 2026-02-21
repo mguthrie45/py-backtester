@@ -4,8 +4,7 @@ from typing import Iterator
 
 from pandas import DataFrame
 from log.logger import Logger
-from model.config.Test import Test
-from model.config.types import TimeInterval, TimeIntervalAdapter, DatasourceType
+from model.test import Test, TimeInterval, TimeIntervalAdapter, DatasourceType
 from strategy.Strategy import Strategy
 from data.types import (
     PRICE_HISTORY_DATA_FRAME_INDEX_NAME,

@@ -1,9 +1,8 @@
 from collections import defaultdict
 from controller.HoldingStateManager import HoldingState
 from log.logger import Logger
-from model.data.trade_slices import TradeAction, TradeActionType
-from model.data.state_slices import HoldingStateSlice
-from model.data.types import HoldingStateType
+from model.state_slices import HoldingStateSlice, HoldingStateType
+from model.trade_slices import TradeAction, TradeActionType
 
 
 class HoldingsManager:

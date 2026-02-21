@@ -13,7 +13,7 @@ from constants import (
     FILE_PATH_PLOT_DATA,
     OBS_FIELD_TIMESTAMP,
 )
-from model.reporting.types import ObservationType, ObservationTypeMetadata
+from model.reporting import ObservationType, ObservationTypeMetadata
 from reporting.context import ObservationContext
 
 # Columns written to plot_data.csv (dt for x-axis, ticker and s_close for plotting)

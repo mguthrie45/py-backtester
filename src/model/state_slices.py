@@ -1,10 +1,26 @@
+"""
+State slice models and related types (from model.data.state_slices + model.data.types).
+"""
+from abc import ABC
 from datetime import datetime
+from enum import Enum
 from typing import Optional
+
 from pandas import DataFrame
 from pydantic import BaseModel, Field
 
-from model.data.types import DataFrameable, HoldingStateType, JSONable
-from model.reporting.observable import ObservableState
+from model.reporting import JSONable, ObservableState
+
+
+class HoldingStateType(str, Enum):
+    BUY = "buy"
+    SHORT = "short"
+
+
+class DataFrameable(ABC):
+    @property
+    def df(self) -> DataFrame:
+        pass
 
 
 class StockSlice(BaseModel, JSONable, ObservableState):

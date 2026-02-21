@@ -1,10 +1,18 @@
+"""
+Trade slice models and related types (from model.data.trade_slices + model.data.types).
+"""
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from model.data.types import TradeActionType, JSONable
-from model.reporting.observable import ObservableTrade
+from model.reporting import JSONable, ObservableTrade
+
+
+class TradeActionType(str, Enum):
+    BUY = "buy"
+    SELL = "sell"
 
 
 class TradeAction(BaseModel, JSONable, ObservableTrade):

@@ -1,8 +1,8 @@
 from controller.CapitalStateManager import CapitalState
 from controller.HoldingsManager import HoldingsManager
 from log.logger import Logger
-from model.data.trade_slices import TradeAction
-from model.data.types import DataFrameable
+from model.state_slices import DataFrameable
+from model.trade_slices import TradeAction
 
 
 class PortfolioManager(DataFrameable):

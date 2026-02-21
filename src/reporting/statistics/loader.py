@@ -3,7 +3,7 @@ from typing import Generator, Optional
 import pandas as pd
 
 from constants import OBS_FIELD_TIMESTAMP
-from model.reporting.types import ObservationType, ObservationTypeMetadata
+from model.reporting import ObservationType, ObservationTypeMetadata
 from reporting.context import ObservationContext
 
 

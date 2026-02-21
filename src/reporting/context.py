@@ -11,8 +11,7 @@ from constants import (
     OBS_FIELDS_NO_PREFIX,
 )
 from log.logger import Logger
-from model.reporting.observable import Observable
-from model.reporting.types import ObservationType
+from model.reporting import Observable, ObservationType
 
 
 class ObservationContext:

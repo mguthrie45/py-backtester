@@ -6,8 +6,8 @@ from data.datasources import Datasource
 from log.logger import Logger
 from metrics.slice.extended.provider import ExtendedMetricsProvider
 from metrics.slice.types import StockSliceMetricsName_Base
-from model.config.Test import Test
-from model.data.state_slices import StockSlice
+from model.state_slices import StockSlice
+from model.test import Test
 from strategy.Strategy import Strategy
 
 

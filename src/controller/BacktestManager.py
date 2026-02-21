@@ -7,8 +7,8 @@ from reporting.dashboard.downsampler import Downsampler
 from reporting.observer import Observer
 from reporting.statistics.engine import BacktestReportEngine
 from strategy.Strategy import Strategy
-from model.config.Test import Test
-from model.data.state_slices import StockSlice
+from model.state_slices import StockSlice
+from model.test import Test
 from controller.PortfolioManager import PortfolioManager
 
 

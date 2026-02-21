@@ -1,7 +1,7 @@
 import sys
 from controller.BacktestManager import BacktestManager
 from log.logger import Logger
-from model.config.Test import Test
+from model.test import Test
 from reporting.context import ObservationContext
 from reporting.dashboard.downsampler import Downsampler
 from reporting.statistics.engine import BacktestReportEngine

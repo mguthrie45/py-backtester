@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 from controller.types import Sliceable
 from log.logger import Logger
-from model.data.trade_slices import TradeAction, TradeActionType
-from model.data.state_slices import CapitalStateSlice
+from model.state_slices import CapitalStateSlice
+from model.trade_slices import TradeAction, TradeActionType
 
 
 @dataclass

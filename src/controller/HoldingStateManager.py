@@ -2,8 +2,7 @@ from dataclasses import dataclass
 
 from controller.types import Sliceable
 from log.logger import Logger
-from model.data.state_slices import HoldingStateSlice
-from model.data.types import HoldingStateType
+from model.state_slices import HoldingStateSlice, HoldingStateType
 
 
 @dataclass

@@ -4,11 +4,7 @@ from typing import Optional
 
 from constants import DEFAULT_OBSERVATION_BATCH_SIZE, OBS_FIELDS_NO_PREFIX
 from log.logger import Logger
-from model.reporting.types import (
-    Observable,
-    ObservationType,
-    ObservationTypeState,
-)
+from model.reporting import Observable, ObservationType, ObservationTypeState
 from reporting.context import ObservationContext
 
 
