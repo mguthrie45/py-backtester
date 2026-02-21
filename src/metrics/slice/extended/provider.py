@@ -1,4 +1,3 @@
-# TODO: Extend metrics and consider separate file
 from pandas import DataFrame
 
 from metrics.slice.extended.rsi_10 import rsi_10

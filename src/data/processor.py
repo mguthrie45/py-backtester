@@ -2,11 +2,12 @@ from typing import Iterator
 
 import pandas as pd
 from pandas import DataFrame
-from data.datasources.singleton import Datasource
+from data.datasources import Datasource
 from log.logger import Logger
 from metrics.slice.extended.provider import ExtendedMetricsProvider
 from metrics.slice.types import StockSliceMetricsName_Base
-from model.data.StockSlice import StockSlice
+from model.config.Test import Test
+from model.data.state_slices import StockSlice
 from strategy.Strategy import Strategy
 
 
@@ -14,8 +15,9 @@ class DatasourceProcessor:
     __datasource: Datasource
     __strategy: Strategy
 
-    def __init__(self, datasource: Datasource, strategy: Strategy):
+    def __init__(self, datasource: Datasource, test: Test, strategy: Strategy):
         self.__datasource = datasource
+        self.__test = test
         self.__strategy = strategy
 
     def _augment_extended_metrics(
@@ -33,13 +35,20 @@ class DatasourceProcessor:
         return df_batch
 
     def _df_to_slices(
-        self, df_batch: DataFrame, last_prev: StockSlice | None
+        self,
+        df_batch: DataFrame,
+        last_prev: StockSlice | None,
     ) -> list[StockSlice]:
         slices: list[StockSlice] = []
         for dt, row in df_batch.iterrows():
             row_dict = row.to_dict()
             prev = last_prev if len(slices) == 0 else slices[-1]
-            stock_slice = StockSlice(dt=dt, prev=prev, **row_dict)
+            stock_slice = StockSlice(
+                dt=dt,
+                ticker=self.__test.data_params.ticker,
+                prev=prev,
+                **row_dict,
+            )
             slices.append(stock_slice)
         if slices:
             Logger.debug(

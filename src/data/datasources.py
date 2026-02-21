@@ -1,20 +1,41 @@
+from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from typing import Iterator
 
-import pandas as pd
 from pandas import DataFrame
-import yfinance
-
-from data.datasources.generic import AbstractDatasource
+from log.logger import Logger
+from model.config.Test import Test
+from model.config.types import TimeInterval, TimeIntervalAdapter, DatasourceType
+from strategy.Strategy import Strategy
 from data.types import (
     PRICE_HISTORY_DATA_FRAME_INDEX_NAME,
     PriceHistoryDataFrameMetricsName_Base,
     PriceHistoryDataFrameMetricsName_BaseAdapter,
 )
-from log.logger import Logger
-from model.config.TimeInterval import TimeInterval, TimeIntervalAdapter
-from strategy.Strategy import Strategy
-from model.config.Test import Test
+
+import pandas as pd
+import yfinance
+
+
+class AbstractDatasource(ABC):
+    _stategy: Strategy
+    _test: Test
+
+    def __init__(self, test: Test, strategy: Strategy):
+        Logger.debug("Initializing Datasource.")
+        self._test = test
+        self._stategy = strategy
+
+    @abstractmethod
+    def _load_window(
+        self, start: datetime, end: datetime | None, interval: TimeInterval
+    ) -> DataFrame:
+        """Loads a window of test params batch size + lookback size."""
+
+    @property
+    @abstractmethod
+    def df_batches(self) -> Iterator[DataFrame]:
+        pass
 
 
 class YFinanceDatasource(AbstractDatasource):
@@ -133,3 +154,31 @@ class YFinanceDatasource(AbstractDatasource):
                 break
 
             window_start = actual_end_dt
+
+
+class CSVDatasetDatasource(AbstractDatasource):
+    def __init__(self, test: Test, strategy: Strategy):
+        super().__init__(test, strategy)
+
+    def _load_window(self) -> DataFrame:
+        pass
+
+    def df_batches(self) -> Iterator[DataFrame]:
+        pass
+
+
+class Datasource:
+    __instance: AbstractDatasource
+
+    def __init__(self, test: Test, strategy: Strategy):
+        match test.data_params.datasource_type:
+            case DatasourceType.YAHOO_FINANCE:
+                self.__instance = YFinanceDatasource(test, strategy)
+            case DatasourceType.CSV_DATASET:
+                self.__instance = CSVDatasetDatasource(test, strategy)
+            case _:
+                raise Exception(f"Uknown datasource type {type}")
+
+    @property
+    def instance(self) -> AbstractDatasource:
+        return self.__instance

@@ -8,6 +8,7 @@ data_params:
   end_dt: 2026-01-30T00:00:00.000Z
 trading_params:
   evaluation_period: 1
+  init_cap: 10000
 logging_params:
   level: info
 report_params:

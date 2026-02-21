@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Optional
-import yaml
-import os
 
+import yaml
 from typing_extensions import Annotated
+
+from constants import FILE_PATH_CONFIG_TESTS_DIR
 from pydantic import (
     BaseModel,
     Field,
@@ -13,8 +14,7 @@ from pydantic import (
 )
 
 from log.types import LogLevel
-from model.config.TimeInterval import TimeInterval
-from model.config.types import DatasourceType
+from model.config.types import DatasourceType, TimeInterval
 
 
 class DataParams(BaseModel):
@@ -28,6 +28,7 @@ class DataParams(BaseModel):
 
 class TradingParams(BaseModel):
     evaluation_period: int = Field(..., gt=0)
+    init_cap: int = Field(..., gt=0)
 
 
 class ReportParams(BaseModel):
@@ -57,24 +58,19 @@ class Test(BaseModel):
 
     @staticmethod
     def from_yaml(name: str):
-        # TODO: Use rel file paths
-        path = os.path.join(
-            "C:/Users/mguth/Desktop/backtest/config/tests", f"{name}.yaml"
-        )
+        path = FILE_PATH_CONFIG_TESTS_DIR / f"{name}.yaml"
         try:
-            with open(path, "r") as f:
+            content = path.read_text(encoding="utf-8")
+            try:
+                test_yml = yaml.safe_load(content)
                 try:
-                    test_yml = yaml.safe_load(f)
-                    try:
-                        return Test.model_validate(test_yml)
-                    except ValidationError as err:
-                        print(f"Test '{name}' is misconfigured.")
-                        raise err
-
-                except yaml.YAMLError as err:
-                    print(err)
+                    return Test.model_validate(test_yml)
+                except ValidationError as err:
+                    print(f"Test '{name}' is misconfigured.")
                     raise err
-
+            except yaml.YAMLError as err:
+                print(err)
+                raise err
         except FileNotFoundError as err:
             print(f"Test '{name}' not found.")
             raise err

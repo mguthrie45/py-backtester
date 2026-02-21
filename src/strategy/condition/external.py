@@ -1,14 +1,18 @@
-import os
+from pathlib import Path
+
+from pandas.core.frame import DataFrame
+from collections import defaultdict
 from importlib.machinery import SourceFileLoader
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, FilePath, model_validator, Field
 
-from controller.portfolio import PortfolioController
 from log.logger import Logger
 from metrics.slice.types import StockSliceMetricsName
-from model.data.Action import Action
-from model.data.StockSlice import StockSlice
+from model.data.trade_slices import TradeAction
+from model.data.state_slices import CapitalStateSliceWindow
+from model.data.state_slices import HoldingStateSliceWindow
+from model.data.state_slices import StockSliceWindow
 from strategy.condition.types import ConditionType
 
 
@@ -27,34 +31,42 @@ class ExternalCondition(BaseModel):
     context_attrs: ContextAttrs
 
     @model_validator(mode="after")
-    def file_exists(self):
-        assert os.path.exists(self.py_file), (
+    def load_module(self):
+        assert Path(self.py_file).exists(), (
             f"condition '{self.py_file}' does not exist."
         )
+
+        self._module = SourceFileLoader(self.name, str(self.py_file)).load_module()
+
         return self
 
-    def args(self) -> list[str]:
-        pass
-
+    @property
     def lookback_window_size(self) -> int:
         """Lookback (slices) required by this condition's context."""
         return self.context_attrs.slice_lookback_window_size
 
     def eval(
-        self, slices_with_lookback: StockSlice, portfolio: PortfolioController
-    ) -> Action | None:
+        self,
+        stock_slices: StockSliceWindow,
+        capital_state_slices: CapitalStateSliceWindow,
+        holding_state_slices: defaultdict[str, HoldingStateSliceWindow],
+    ) -> TradeAction | None:
+        stock_slices_df = stock_slices.df
+        capital_state_slices_df = capital_state_slices.df
+        holding_state_slices_df = defaultdict[str, DataFrame | list](
+            list, {ticker: window.df for ticker, window in holding_state_slices.items()}
+        )
+
         try:
             Logger.debug('executing handler: "%s"', self.py_file)
-            out = (
-                SourceFileLoader(self.name, str(self.py_file))
-                .load_module()
-                .handler(slices_with_lookback, portfolio)
+            out = self._module.handler(
+                stock_slices_df, capital_state_slices_df, holding_state_slices_df
             )
 
             Logger.debug("executed:\n out: %s", out)
 
             if out:
-                return Action(out)
+                return TradeAction.from_tuple(out, dt=stock_slices.slices[-1].dt)
 
             return None
         except Exception as err:

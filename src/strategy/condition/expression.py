@@ -1,8 +1,7 @@
 from typing import Literal, Optional
 
 from pydantic import BaseModel, computed_field
-
-from controller.portfolio import PortfolioController
+from controller import PortfolioManager
 from log.logger import Logger
 from metrics.portfolio.types import PortfolioMetricsName
 from metrics.slice.types import (
@@ -10,11 +9,11 @@ from metrics.slice.types import (
     StockSliceMetricsName_Extended,
     StockSliceExtendedMetricsNameBatchExtensionSizeAdapter,
 )
-from model.data.Action import Action
-from model.data.StockSlice import StockSlice
+from model.data.trade_slices import TradeAction
+from model.data.state_slices import StockSlice
 from strategy.condition.types import (
     ConditionType,
-    ActionPolicy,
+    TradeActionPolicy,
     CONDITION_SLICE_ACCESSOR,
     CONDITION_PORTFOLIO_ACCESSOR,
 )
@@ -23,13 +22,13 @@ from strategy.condition.types import (
 class ExpressionCondition(BaseModel):
     name: str
     type: Literal[ConditionType.EXPRESSION] = ConditionType.EXPRESSION.value
-    action_policy: ActionPolicy
+    action_policy: TradeActionPolicy
     metric_attrs: list[StockSliceMetricsName]
     portfolio_attrs: Optional[list[PortfolioMetricsName]] = None
     # TODO: Add validation to enforce safety
     # TODO: Add validation to check unused metrics, undefined metrics
     expr: str
-    action: Action
+    action: TradeAction
 
     @computed_field
     @property
@@ -49,6 +48,7 @@ class ExpressionCondition(BaseModel):
 
         return res
 
+    @property
     def lookback_window_size(self) -> int:
         """Max lookback (slices) needed by extended metrics used in this condition."""
         extended = [
@@ -64,8 +64,8 @@ class ExpressionCondition(BaseModel):
         )
 
     def eval(
-        self, slices_with_lookback: list[StockSlice], portfolio: PortfolioController
-    ) -> Action | None:
+        self, stock_slices: list[StockSlice], portfolio: PortfolioManager
+    ) -> TradeAction | None:
         Logger.debug(
             "Evaluating expression condition '%s'\n action_policy='%s'\n expr='%s'\n compiled='%s'",
             self.name,
@@ -73,7 +73,7 @@ class ExpressionCondition(BaseModel):
             self.expr,
             self.expr_compiled,
         )
-        stock_slice = slices_with_lookback[-1]
+        stock_slice = stock_slices[-1]
 
         is_cond_curr = eval(
             self.expr_compiled,
@@ -86,7 +86,7 @@ class ExpressionCondition(BaseModel):
 
         is_curr_bool = isinstance(is_cond_curr, bool)
 
-        if self.action_policy == ActionPolicy.CROSSOVER:
+        if self.action_policy == TradeActionPolicy.CROSSOVER:
             is_cond_prev = (
                 True  # We do not want to choose an action based on unknown information
                 if not stock_slice.prev
@@ -105,7 +105,7 @@ class ExpressionCondition(BaseModel):
                 raise Exception(
                     f"condition expression '{self.expr}' does not return a boolean."
                 )
-        elif self.action_policy == ActionPolicy.ABSOLUTE:
+        elif self.action_policy == TradeActionPolicy.ABSOLUTE:
             if is_curr_bool:
                 return self.action if is_cond_curr else None
             else:
